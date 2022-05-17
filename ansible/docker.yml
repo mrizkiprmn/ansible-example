@@ -5,7 +5,7 @@
       proj: "php"
       tag: "latest"
       dests: /home/ubuntu/github/php
-      repo: https://github.com/mrizkiprmn/php-example.git
+      repo: https://github.com/mrizkiprmn/ansible-example.git
       default_container_name: ansible
 
     tasks:
