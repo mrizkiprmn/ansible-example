@@ -1,3 +1,3 @@
 run ansible:
 
-### `ansible-playbook -1 inventory filename.yml`
+### `ansible-playbook -i inventory filename.yml`
