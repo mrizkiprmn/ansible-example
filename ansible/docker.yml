@@ -1,12 +1,14 @@
 ---
   - hosts: localhost
+    connection: local
+
     vars: 
       hub: "mrizkiprmn"
       proj: "php"
       tag: "latest"
-      dests: /home/ubuntu/github/php
+      dir: /home/mrizkiprmn/Documents/github
       repo: https://github.com/mrizkiprmn/ansible-example.git
-      default_container_name: ansible
+      container_name: ansible
 
     pre_tasks:
   
@@ -17,27 +19,24 @@
           - docker-compose
 
     tasks:
-    
-      - name: "Build image"
+
+      - name: build image
         docker_image:
           name: "{{hub}}/{{proj}}:{{tag}}"
           build:
-            path: "{{dests}}/{{proj}}"
+            path: "{{dir}}/{{proj}}"
           source: build
 
 
-      - name: "Push image to registry"
+      - name: push image to registry
         docker_image:
           name: "{{hub}}/{{proj}}:{{tag}}"
           repository: "{{hub}}/{{proj}}:{{tag}}"
           push: yes
           source: local
 
-      - name: "Push images with command"
-        command: docker push "{{hub}}/{{proj}}:{{tag}}"
 
-
-      - name: "Remove image"
+      - name: remove image unused
         docker_image:
           state: absent
           name: "{{hub}}/{{proj}}"
@@ -45,23 +44,23 @@
           force_tag: yes
 
 
-      - name: "Pull images"
+      - name: pull images
         docker_image:
           name: "{{hub}}/{{proj}}:{{tag}}"
           source: pull
 
 
-      - name: "Running Docker Container"
+      - name: running Docker Container
         docker_container:
-          name: "{{default_container_name}}"
+          name: "{{container_name}}"
           image: "{{hub}}/{{proj}}:{{tag}}"
           state: started
           restart_policy: always
           ports:
             - "80:80"
 
-      - name: "Deploy Docker Compose stack"
+      - name: deploy docker-compose
         docker_compose:
-          project_src: "{{dests}}"
+          project_src: "{{dir}}"
           files:
             - docker-compose.yaml
