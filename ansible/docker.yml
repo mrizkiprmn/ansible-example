@@ -8,29 +8,16 @@
       repo: https://github.com/mrizkiprmn/ansible-example.git
       default_container_name: ansible
 
-    tasks:
-
-      - name: "Check connection"
-        ping:
-
-      - name: "Esnure git installed"
-        apt:
-          name: git
-          state: present
-
-      - name: "Installing python docker"
+    pre_tasks:
+  
+      - name: install pre-requisites
         pip:
           name: 
           - docker
           - docker-compose
 
-
-      - name: "Git clone"
-        git:
-          repo: "{{repo}}"
-          dest: "{{dests}}/{{proj}}"
-
-
+    tasks:
+    
       - name: "Build image"
         docker_image:
           name: "{{hub}}/{{proj}}:{{tag}}"
