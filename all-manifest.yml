@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: regcred
+  namespace: ansible
+data:
+  .dockerconfigjson: ewoJImF1dGhzIjogewoJCSJodHRwczovL2luZGV4LmRvY2tlci5pby92MS8iOiB7CgkJCSJhdXRoIjogImJYSnBlbXRwY0hKdGJqcE5hWEpoYUdSbGJHbHRZVEE0IgoJCX0KCX0KfQ==
+type: kubernetes.io/dockerconfigjson
+
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ansible
+  namespace: ansible
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ansible
+  template:
+    metadata:
+      labels:
+        app: ansible
+    spec:
+      containers:
+      - name: ansible
+        image: mrizkiprmn/php:latest
+        imagePullSecrets:
+          - name: regcred
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ansible
+  namespace: ansible
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 80

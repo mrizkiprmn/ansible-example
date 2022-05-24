@@ -1,0 +1,35 @@
+- hosts: localhost
+  connection: local
+  
+  pre_tasks:
+
+    - name: check the status of minikube
+      command: minikube status
+      register: minikube_status
+      changed_when: false
+      ignore_errors: true
+
+    - name: start minikube if it's not running.
+      command: minikube start
+      when: "not minikube_status.stdout or 'Running' not in minikube_status.stdout"
+
+    - name: install pre-requisites
+      pip:
+        name:
+          - openshift
+          - pyyaml
+          - kubernetes 
+
+  tasks:
+  
+    - name: create namespace
+      kubernetes.core.k8s:
+        name: ansible
+        api_version: v1
+        kind: Namespace
+        state: present
+
+    - name: create a Deployment by reading the definition from a local file
+      kubernetes.core.k8s:
+        state: present
+        src: /home/mrizkiprmn/Documents/github/ansible-example/all-manifest.yml
