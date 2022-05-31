@@ -4,7 +4,7 @@ metadata:
   name: regcred
   namespace: ansible
 data:
-  .dockerconfigjson: ewoJImF1dGhzIjogewoJCSJodHRwczovL2luZGV4LmRvY2tlci5pby92MS8iOiB7CgkJCSJhdXRoIjogImJYSnBlbXRwY0hKdGJqcE5hWEpoYUdSbGJHbHRZVEE0IgoJCX0KCX0KfQ==
+  .dockerconfigjson: ewogICAgImF1dGhzIjoKICAgIHsKICAgICAgICAiZ2hjci5pbyI6CiAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICJhdXRoIjoiYlhKcGVtdHBjSEp0YmpwbmFIQmZRak5xTVVFd2MzZDBSMlp6TTJKV1dsRnhZMWxJT1doUGNEZENNVmxDTkRSVFRXWjIiCiAgICAgICAgICAgIH0KICAgIH0KfQo=
 type: kubernetes.io/dockerconfigjson
 
 
@@ -25,14 +25,14 @@ spec:
       labels:
         app: ansible
     spec:
+      imagePullSecrets:
+        - name: regcred
       containers:
-      - name: ansible
-        image: mrizkiprmn/php:latest
-        imagePullSecrets:
-          - name: regcred
-        imagePullPolicy: Always
-        ports:
-        - containerPort: 80
+        - name: ansible
+          image: ghcr.io/mrizkiprmn/ansible-example:latest
+          imagePullPolicy: Always
+          ports:
+          - containerPort: 80
 
 ---
 

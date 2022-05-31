@@ -32,4 +32,4 @@
     - name: create a Deployment by reading the definition from a local file
       kubernetes.core.k8s:
         state: present
-        src: /home/mrizkiprmn/Documents/github/ansible-example/all-manifest.yml
+        src: /home/mrizkiprmn/github/ansible-example/all-manifest.yml
