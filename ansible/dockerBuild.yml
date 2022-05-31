@@ -1,0 +1,45 @@
+---
+  - hosts: localhost
+    connection: local
+
+    vars:
+
+      registry       : ghcr.io/mrizkiprmn
+      proj           : ansible-example
+      tag            : 'latest'
+      dir            : /home/mrizkiprmn/github
+      repo           : https://github.com/mrizkiprmn/ansible-example.git
+      container_name : ansible
+
+    pre_tasks:
+  
+      - name: install pre-requisites
+        pip:
+          name: 
+          - docker
+          - docker-compose
+
+    tasks:
+
+     - name: Git checkout
+       ansible.builtin.git:
+         repo: "{{ repo }}"
+         dest: "{{ dir }}/{{ proj }}"
+         version: master
+         force: yes
+
+     - name: Build an image and push it to a private repo
+       community.docker.docker_image:
+         build:
+           path: "{{ dir }}/{{ proj }}"
+         name: "{{ registry }}/{{ proj }}"
+         tag: "{{ tag }}"
+         push: yes
+         source: build
+
+     - name: remove image unused
+       community.docker.docker_image:
+         state: absent
+         name: "{{ registry }}/{{ proj }}"
+         tag: "{{ tag }}"
+         force_tag: yes

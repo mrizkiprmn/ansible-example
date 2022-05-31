@@ -1,7 +1,6 @@
 version : "3.9"
 services:
   app:
-   container_name: ansible
-   image: mrizkiprmn/php:test
+   image: ghcr.io/mrizkiprmn/ansible-example:latest
    ports:
      - 80:80

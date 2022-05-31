@@ -1,0 +1,34 @@
+---
+  - hosts: localhost
+    connection: local
+
+    vars:
+
+      registry       : ghcr.io/mrizkiprmn
+      proj           : ansible-example
+      tag            : latest
+      dir            : /home/mrizkiprmn/github/
+      repo           : https://github.com/mrizkiprmn/ansible-example.git
+
+    pre_tasks:
+  
+      - name: install pre-requisites
+        pip:
+          name: 
+          - docker
+          - docker-compose
+
+    tasks:
+
+     - name: Pull an image
+       community.docker.docker_image:
+         name: "{{ registry }}/{{ proj }}"
+         source: pull
+         pull:
+           platform: amd64
+
+     - name: deploy docker-compose
+       docker_compose:
+         project_src: "{{ dir }}/{{ proj }}"
+         files:
+           - docker-compose.yaml
